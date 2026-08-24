@@ -3,15 +3,15 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-primary: #ffffff;
-  --color-primary-light: #d1d1d6;
-  --color-primary-dark: #8e8e93;
-  --color-accent: #ffffff;
-  --color-neon-blue: #ffffff;
-  --color-neon-purple: #e5e5ea;
-  --color-neon-pink: #d1d1d6;
-  --color-neon-cyan: #d1d1d6;
-  --color-neon-green: #ffffff;
+  --color-primary: #0a84ff;
+  --color-primary-light: #409cff;
+  --color-primary-dark: #0060cc;
+  --color-accent: #30d158;
+  --color-neon-blue: #0a84ff;
+  --color-neon-purple: #bf5af2;
+  --color-neon-pink: #ff375f;
+  --color-neon-cyan: #64d2ff;
+  --color-neon-green: #30d158;
   --font-sf: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
     "Helvetica Neue", "Segoe UI", system-ui, sans-serif;
 }
@@ -25,12 +25,10 @@ html {
 
 body {
   font-family: var(--font-sf);
-  background: #000000;
-  color: #ffffff;
-  transition: color 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  @apply bg-gray-50 text-gray-900 dark:bg-black dark:text-white transition-colors duration-500;
 }
 
-/* ── Ambient Background Glow (silver, no color) ── */
+/* ── Ambient Background Glow ── */
 .ios-ambient-glow {
   position: fixed;
   inset: 0;
@@ -45,7 +43,7 @@ body {
   width: 600px;
   height: 600px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(10, 132, 255, 0.12) 0%, transparent 70%);
   filter: blur(80px);
   animation: glow-drift 20s ease-in-out infinite alternate;
 }
@@ -57,9 +55,15 @@ body {
   width: 500px;
   height: 500px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,255,255,0.03) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(191, 90, 242, 0.1) 0%, transparent 70%);
   filter: blur(80px);
   animation: glow-drift 25s ease-in-out infinite alternate-reverse;
+}
+.dark .ios-ambient-glow::before {
+  background: radial-gradient(circle, rgba(10, 132, 255, 0.07) 0%, transparent 70%);
+}
+.dark .ios-ambient-glow::after {
+  background: radial-gradient(circle, rgba(191, 90, 242, 0.05) 0%, transparent 70%);
 }
 @keyframes glow-drift {
   0% { transform: translate(0, 0) scale(1); }
@@ -69,12 +73,16 @@ body {
 
 /* ── Glass Cards ── */
 .ios-glass {
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.72);
   backdrop-filter: blur(40px) saturate(180%);
   -webkit-backdrop-filter: blur(40px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 24px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.05);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02), inset 0 1px 0 rgba(255,255,255,0.6);
+}
+.dark .ios-glass {
+  background: rgba(30, 30, 30, 0.65);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.2), 0 1px 2px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.05);
 }
 
 .ios-frosted {
@@ -92,31 +100,40 @@ body {
 
 /* ── Inputs ── */
 .ios-input {
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(120, 120, 128, 0.08);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(120, 120, 128, 0.18);
   border-radius: 14px;
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 .ios-input:focus {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.3);
-  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.06);
+  background: rgba(120, 120, 128, 0.12);
+  border-color: rgba(10, 132, 255, 0.5);
+  box-shadow: 0 0 0 4px rgba(10, 132, 255, 0.1);
   outline: none;
+}
+.dark .ios-input {
+  background: rgba(120, 120, 128, 0.12);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+.dark .ios-input:focus {
+  background: rgba(120, 120, 128, 0.18);
+  border-color: rgba(10, 132, 255, 0.6);
+  box-shadow: 0 0 0 4px rgba(10, 132, 255, 0.15);
 }
 
 /* ── Buttons ── */
 .ios-btn-primary {
-  background: rgba(255, 255, 255, 0.92);
-  color: #000000;
+  background: linear-gradient(135deg, #0a84ff 0%, #5e5ce6 100%);
+  color: white;
   font-weight: 600;
   border-radius: 16px;
   padding: 14px 28px;
   font-size: 16px;
   letter-spacing: -0.01em;
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  box-shadow: 0 4px 16px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.2);
+  box-shadow: 0 4px 16px rgba(10,132,255,0.3), 0 1px 3px rgba(10,132,255,0.2), inset 0 1px 0 rgba(255,255,255,0.2);
   position: relative;
   overflow: hidden;
 }
@@ -129,33 +146,39 @@ body {
 }
 .ios-btn-primary:hover {
   transform: translateY(-1px) scale(1.02);
-  box-shadow: 0 8px 24px rgba(255,255,255,0.12), inset 0 1px 0 rgba(255,255,255,0.2);
+  box-shadow: 0 8px 24px rgba(10,132,255,0.4), 0 2px 6px rgba(10,132,255,0.25), inset 0 1px 0 rgba(255,255,255,0.2);
 }
 .ios-btn-primary:active {
   transform: translateY(0) scale(0.98);
 }
 
 .ios-btn-ghost {
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(120, 120, 128, 0.08);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  color: #ffffff;
+  color: #0a84ff;
   font-weight: 600;
   border-radius: 16px;
   padding: 14px 28px;
   font-size: 16px;
   letter-spacing: -0.01em;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(120, 120, 128, 0.15);
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 .ios-btn-ghost:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(10, 132, 255, 0.08);
+  border-color: rgba(10, 132, 255, 0.25);
   transform: translateY(-1px) scale(1.02);
 }
 .ios-btn-ghost:active {
   transform: translateY(0) scale(0.98);
 }
+.dark .ios-btn-ghost {
+  color: #409cff;
+  background: rgba(120, 120, 128, 0.12);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+.dark .ios-btn-ghost:hover { background: rgba(10, 132, 255, 0.12); }
 
 /* ── Tags ── */
 .ios-tag {
@@ -166,19 +189,21 @@ body {
   font-size: 12px;
   font-weight: 600;
   letter-spacing: -0.01em;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.1);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(10, 132, 255, 0.15);
   transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
-.ios-tag:hover { transform: scale(1.05); background: rgba(255,255,255,0.1); }
+.ios-tag:hover { transform: scale(1.05); }
 
 /* ── Skill Bars ── */
 .ios-skill-bar {
   height: 6px;
   border-radius: 3px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(120, 120, 128, 0.12);
   overflow: hidden;
 }
+.dark .ios-skill-bar { background: rgba(120, 120, 128, 0.18); }
 
 .ios-skill-fill {
   height: 100%;
@@ -200,7 +225,13 @@ body {
   font-weight: 700;
   letter-spacing: -0.03em;
   line-height: 1.1;
-  background: linear-gradient(135deg, #ffffff 0%, #d1d1d6 50%, #8e8e93 100%);
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.dark .ios-section-title {
+  background: linear-gradient(135deg, #f5f5f7 0%, #e5e5ea 50%, #d1d1d6 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -208,7 +239,7 @@ body {
 
 /* ── Gradient Text ── */
 .gradient-text {
-  background: linear-gradient(135deg, #ffffff, #d1d1d6, #8e8e93, #ffffff);
+  background: linear-gradient(135deg, #0a84ff, #5e5ce6, #bf5af2, #0a84ff);
   background-size: 300% 300%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -267,11 +298,15 @@ body {
   max-height: 800px;
   border-radius: 24px;
   overflow: hidden;
-  background: rgba(0, 0, 0, 0.85);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(60px) saturate(200%);
   -webkit-backdrop-filter: blur(60px) saturate(200%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 25px 80px rgba(0,0,0,0.5), 0 0 1px rgba(255,255,255,0.05);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3), 0 0 1px rgba(0, 0, 0, 0.1);
+}
+.dark .modal-container {
+  background: rgba(20, 20, 20, 0.85);
+  border-color: rgba(255, 255, 255, 0.08);
 }
 .modal-toolbar {
   display: flex;
@@ -320,7 +355,7 @@ body {
 .typing-cursor::after {
   content: "|";
   animation: blink 1s step-end infinite;
-  color: #ffffff;
+  color: #0a84ff;
   font-weight: 300;
 }
 @keyframes blink {
@@ -334,7 +369,7 @@ body {
   top: 0;
   bottom: 0;
   width: 2px;
-  background: linear-gradient(180deg, #ffffff, #8e8e93, rgba(142,142,147,0.2), transparent);
+  background: linear-gradient(180deg, #0a84ff, #5e5ce6, #bf5af2, transparent);
 }
 .timeline-dot {
   position: absolute;
@@ -342,7 +377,8 @@ body {
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  border: 2px solid #ffffff;
-  background: #000000;
+  border: 2px solid #0a84ff;
+  background: white;
   z-index: 1;
 }
+.dark .timeline-dot { background: #1c1c1e; }

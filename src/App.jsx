@@ -3,7 +3,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect } from 'react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import SpaceBackground from './components/SpaceBackground';
 import Home from './pages/Home';
 import About from './pages/About';
 import Skills from './pages/Skills';
@@ -48,7 +47,8 @@ export default function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
-      <SpaceBackground />
+      {/* Fixed ambient glow — purely decorative, never blocks scrolling */}
+      <div className="ios-ambient-glow" aria-hidden="true" />
       {/* Page wrapper */}
       <div className="relative z-10 min-h-screen">
         <Navbar />
