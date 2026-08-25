@@ -1,13 +1,14 @@
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useEffect } from 'react';
+import { useEffect, Suspense, lazy } from 'react';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import Home from './pages/Home';
-import About from './pages/About';
-import Skills from './pages/Skills';
-import Projects from './pages/Projects';
-import Contact from './pages/Contact';
+
+const Home = lazy(() => import('./pages/Home'));
+const About = lazy(() => import('./pages/About'));
+const Skills = lazy(() => import('./pages/Skills'));
+const Projects = lazy(() => import('./pages/Projects'));
+const Contact = lazy(() => import('./pages/Contact'));
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -53,7 +54,9 @@ export default function App() {
       <div className="relative z-10 min-h-screen">
         <Navbar />
         <main className="pt-20">
-          <AppRoutes />
+          <Suspense fallback={<div className="min-h-screen bg-slate-50 dark:bg-black" />}>
+            <AppRoutes />
+          </Suspense>
         </main>
         <Footer />
       </div>

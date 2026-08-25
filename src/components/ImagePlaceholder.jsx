@@ -57,19 +57,19 @@ const techIcons = [
   ),
 ];
 
+/* Monochrome icon color pairs */
 const projectGradientPairs = [
-  ['#0a84ff', '#5e5ce6', 'from-[#0a84ff]/8 to-[#5e5ce6]/4'],
-  ['#30d158', '#34c759', 'from-[#30d158]/8 to-[#34c759]/4'],
-  ['#ff375f', '#ff6b6b', 'from-[#ff375f]/8 to-[#ff6b6b]/4'],
-  ['#bf5af2', '#5e5ce6', 'from-[#bf5af2]/8 to-[#5e5ce6]/4'],
-  ['#ff9500', '#ffcc02', 'from-[#ff9500]/8 to-[#ffcc02]/4'],
-  ['#64d2ff', '#0a84ff', 'from-[#64d2ff]/8 to-[#0a84ff]/4'],
+  ['#d1d1d6', '#8e8e93', 'from-white/8 to-white/4'],
+  ['#c7c7cc', '#8e8e93', 'from-white/6 to-white/3'],
+  ['#aeaeb2', '#636366', 'from-white/5 to-white/2'],
+  ['#e5e5ea', '#8e8e93', 'from-white/7 to-white/3'],
+  ['#c7c7cc', '#636366', 'from-white/6 to-white/2'],
+  ['#d1d1d6', '#636366', 'from-white/8 to-white/3'],
 ];
 
 function ProjectPlaceholder({ label }) {
-  // Deterministic pick from label string
   const hash = label ? label.charCodeAt(0) + (label.charCodeAt(1) || 0) : 0;
-  const [color1, color2, gradientCls] = projectGradientPairs[hash % projectGradientPairs.length];
+  const [color1, , gradientCls] = projectGradientPairs[hash % projectGradientPairs.length];
   const renderIcon = techIcons[hash % techIcons.length];
 
   return (
@@ -95,27 +95,29 @@ export default function ImagePlaceholder({
   aspectRatio = '',
   className = '',
   glow = true,
-  icon = '',      // 'avatar' | 'project'
-  type = '',      // alias: 'profile' behaves like 'avatar'
-  label = '',     // text label for project placeholders
+  icon = '',
+  type = '',
+  label = '',
 }) {
   const isAvatar = icon === 'avatar' || type === 'profile';
   const isProject = icon === 'project' || type === 'project';
 
-  // Avatar: show user photo
   if (isAvatar) {
     return (
       <div
         className={`${width} ${height} ${aspectRatio} ${className} relative flex flex-col items-center justify-center rounded-3xl overflow-hidden transition-all duration-500 ${
           glow
-            ? 'bg-gradient-to-br from-[#0a84ff]/10 via-[#5e5ce6]/10 to-[#bf5af2]/10 border border-[#0a84ff]/30 shadow-lg shadow-purple-500/10'
-            : 'bg-gradient-to-br from-gray-100 to-gray-200 dark:from-[#1c1c1e] dark:to-[#2c2c2e] border border-white/20 dark:border-white/5'
+            ? 'bg-gradient-to-br from-white/10 via-white/5 to-white/10 border border-white/20 shadow-lg shadow-black/5'
+            : 'bg-gradient-to-br from-gray-100 to-gray-200 dark:from-[#1c1c1e] dark:to-[#2c2c2e] border border-black/10 dark:border-white/5'
         }`}
       >
         {/* <!-- Insert Profile Image Here --> */}
         <img
           src="./hero.png"
           alt="Faridun Abdurazakov"
+          loading="lazy"
+          decoding="async"
+          fetchpriority="high"
           className="w-full h-full object-cover rounded-3xl"
           onError={(e) => {
             e.target.style.display = 'none';
@@ -126,24 +128,22 @@ export default function ImagePlaceholder({
     );
   }
 
-  // Project: show abstract tech icon
   if (isProject) {
     return (
       <div
-        className={`${width} ${height} ${aspectRatio} ${className} relative flex flex-col items-center justify-center rounded-3xl overflow-hidden transition-all duration-500 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-[#1c1c1e] dark:to-[#2c2c2e] border border-white/10 dark:border-white/5`}
+        className={`${width} ${height} ${aspectRatio} ${className} relative flex flex-col items-center justify-center rounded-3xl overflow-hidden transition-all duration-500 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-[#1c1c1e] dark:to-[#2c2c2e] border border-black/10 dark:border-white/5`}
       >
         <ProjectPlaceholder label={label} />
       </div>
     );
   }
 
-  // Fallback: generic placeholder
   return (
     <div
       className={`${width} ${height} ${aspectRatio} ${className} relative flex flex-col items-center justify-center rounded-3xl overflow-hidden transition-all duration-500 ${
         glow
-          ? 'bg-gradient-to-br from-[#0a84ff]/10 via-[#5e5ce6]/10 to-[#bf5af2]/10 border border-[#0a84ff]/30 shadow-lg shadow-purple-500/10'
-          : 'bg-gradient-to-br from-gray-100 to-gray-200 dark:from-[#1c1c1e] dark:to-[#2c2c2e] border border-white/20 dark:border-white/5'
+          ? 'bg-gradient-to-br from-white/10 via-white/5 to-white/10 border border-white/20 shadow-lg shadow-black/5'
+          : 'bg-gradient-to-br from-gray-100 to-gray-200 dark:from-[#1c1c1e] dark:to-[#2c2c2e] border border-black/10 dark:border-white/5'
       }`}
     >
       {/* <!-- Insert Image Here --> */}

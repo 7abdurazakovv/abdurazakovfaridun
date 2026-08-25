@@ -28,7 +28,6 @@ export default function Footer() {
   return (
     <footer className="relative z-10 mt-24 pb-6">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Dock-style footer */}
         <div className="ios-frosted rounded-3xl p-6 sm:p-8">
           <div className="flex flex-col items-center gap-6">
             {/* Social Links */}
@@ -41,7 +40,7 @@ export default function Footer() {
                   rel="noopener noreferrer"
                   whileHover={{ scale: 1.1, y: -2 }}
                   whileTap={{ scale: 0.95 }}
-                  className="ios-glass p-3 rounded-2xl text-gray-500 dark:text-gray-400 hover:text-[#0a84ff] dark:hover:text-[#409cff] transition-colors duration-300"
+                  className="ios-glass p-3 rounded-2xl text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-300"
                   aria-label={link.name}
                 >
                   {link.icon}
@@ -64,7 +63,7 @@ export default function Footer() {
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="ios-glass p-2.5 rounded-2xl text-gray-400 dark:text-gray-500 hover:text-[#0a84ff] dark:hover:text-[#409cff] transition-colors"
+              className="ios-glass p-2.5 rounded-2xl text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors"
               aria-label="Back to top"
             >
               <ArrowUp size={18} />

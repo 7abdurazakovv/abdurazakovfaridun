@@ -31,20 +31,30 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
+  /* Lock body scroll when mobile menu is open */
+  useEffect(() => {
+    if (menuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [menuOpen]);
+
   /* Close mobile menu on route change */
   useEffect(() => { setMenuOpen(false); }, []);
 
   const linkClass = ({ isActive }) =>
     `relative px-4 py-2 rounded-2xl text-[13px] font-semibold tracking-tight transition-all duration-300 ${
       isActive
-        ? 'text-white'
+        ? 'bg-black/10 dark:bg-white/10 text-gray-900 dark:text-white'
         : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-black/[0.04] dark:hover:bg-white/[0.06]'
     }`;
 
   const mobileLinkClass = ({ isActive }) =>
     `block px-4 py-2.5 rounded-2xl text-sm font-semibold transition-all duration-300 ${
       isActive
-        ? 'bg-gradient-to-r from-[#0a84ff] to-[#5e5ce6] text-white shadow-md'
+        ? 'bg-black/10 dark:bg-white/10 text-gray-900 dark:text-white'
         : 'text-gray-500 dark:text-gray-400 hover:bg-black/[0.04] dark:hover:bg-white/[0.06]'
     }`;
 
@@ -75,7 +85,7 @@ export default function Navbar() {
                     {isActive && (
                       <motion.span
                         layoutId="nav-active"
-                        className="absolute inset-0 rounded-2xl bg-gradient-to-r from-[#0a84ff] to-[#5e5ce6] shadow-lg shadow-[#0a84ff]/25"
+                        className="absolute inset-0 rounded-2xl bg-black/10 dark:bg-white/10"
                         transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                       />
                     )}
@@ -95,7 +105,7 @@ export default function Navbar() {
                   onClick={() => i18n.changeLanguage(lang.code)}
                   className={`px-2.5 py-1 rounded-xl text-[11px] font-bold tracking-wider transition-all duration-300 ${
                     i18n.language.startsWith(lang.code)
-                      ? 'bg-gradient-to-r from-[#0a84ff] to-[#5e5ce6] text-white shadow-md'
+                      ? 'bg-black/10 dark:bg-white/10 text-gray-900 dark:text-white'
                       : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                   }`}
                 >
@@ -127,7 +137,7 @@ export default function Navbar() {
               {languages.find((l) => i18n.language.startsWith(l.code))?.label || 'EN'}
             </button>
             <motion.button
-              whileTap={{ scale: 0.9, rotate: 90 }}
+              whileTap={{ scale: 0.9, rotate: 180 }}
               onClick={toggleDarkMode}
               className="ios-glass p-2 rounded-xl text-gray-500 dark:text-gray-400"
               aria-label="Toggle theme"
@@ -144,35 +154,61 @@ export default function Navbar() {
             </motion.button>
           </div>
         </div>
-
-        {/* Mobile Menu */}
-        <AnimatePresence>
-          {menuOpen && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              className="md:hidden overflow-hidden px-3 pb-3"
-            >
-              <div className="space-y-1 pt-1">
-                {navLinks.map((link, i) => (
-                  <motion.div
-                    key={link.path}
-                    initial={{ x: -20, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: i * 0.05, duration: 0.3 }}
-                  >
-                    <NavLink to={link.path} end={link.path === '/'} onClick={() => setMenuOpen(false)} className={mobileLinkClass}>
-                      {t(`nav.${link.key}`)}
-                    </NavLink>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </motion.nav>
+
+      {/* ═══ Mobile Full-Screen Overlay ═══ */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="fixed inset-x-0 top-[64px] bottom-0 z-50 bg-white/95 dark:bg-black/95 backdrop-blur-2xl flex flex-col items-center justify-start pt-8 space-y-6 overflow-y-auto px-6 md:hidden"
+          >
+            {navLinks.map((link, i) => (
+              <motion.div
+                key={link.path}
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: i * 0.06, duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                className="w-full max-w-xs"
+              >
+                <NavLink
+                  to={link.path}
+                  end={link.path === '/'}
+                  onClick={() => setMenuOpen(false)}
+                  className={mobileLinkClass}
+                >
+                  {t(`nav.${link.key}`)}
+                </NavLink>
+              </motion.div>
+            ))}
+
+            {/* Mobile language picker inside overlay */}
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: navLinks.length * 0.06, duration: 0.3 }}
+              className="flex items-center gap-2 pt-4"
+            >
+              {languages.map((lang) => (
+                <button
+                  key={lang.code}
+                  onClick={() => i18n.changeLanguage(lang.code)}
+                  className={`px-4 py-2 rounded-xl text-[13px] font-bold tracking-wider transition-all duration-300 ${
+                    i18n.language.startsWith(lang.code)
+                      ? 'bg-black/10 dark:bg-white/10 text-gray-900 dark:text-white'
+                      : 'text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:hover:text-white'
+                  }`}
+                >
+                  {lang.label}
+                </button>
+              ))}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 }
