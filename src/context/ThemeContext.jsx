@@ -1,32 +1,41 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useEffect, useState, useCallback } from 'react'
 
-const ThemeContext = createContext();
+const ThemeContext = createContext(null)
+
+function getInitialTheme() {
+  try {
+    const saved = localStorage.getItem('theme')
+    if (saved === 'light' || saved === 'dark') return saved
+  } catch {
+    /* localStorage mavjud emas */
+  }
+  if (typeof window !== 'undefined' && window.matchMedia?.('(prefers-color-scheme: dark)').matches) {
+    return 'dark'
+  }
+  return 'light'
+}
 
 export function ThemeProvider({ children }) {
-  const [darkMode, setDarkMode] = useState(() => {
-    try {
-      const saved = localStorage.getItem('portfolio-dark-mode');
-      if (saved !== null) return JSON.parse(saved);
-    } catch {}
-    return window.matchMedia('(prefers-color-scheme: dark)').matches;
-  });
+  const [theme, setTheme] = useState(getInitialTheme)
 
   useEffect(() => {
-    localStorage.setItem('portfolio-dark-mode', JSON.stringify(darkMode));
-    document.documentElement.classList.toggle('dark', darkMode);
-  }, [darkMode]);
+    document.documentElement.setAttribute('data-theme', theme)
+    const meta = document.querySelector('meta[name="theme-color"]')
+    if (meta) meta.setAttribute('content', theme === 'dark' ? '#16130F' : '#F7F4ED')
+    try {
+      localStorage.setItem('theme', theme)
+    } catch {
+      /* ignore */
+    }
+  }, [theme])
 
-  const toggleDarkMode = () => setDarkMode((prev) => !prev);
+  const toggleTheme = useCallback(() => setTheme((t) => (t === 'dark' ? 'light' : 'dark')), [])
 
-  return (
-    <ThemeContext.Provider value={{ darkMode, toggleDarkMode }}>
-      {children}
-    </ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={{ theme, toggleTheme }}>{children}</ThemeContext.Provider>
 }
 
 export function useTheme() {
-  const ctx = useContext(ThemeContext);
-  if (!ctx) throw new Error('useTheme must be used within ThemeProvider');
-  return ctx;
+  const ctx = useContext(ThemeContext)
+  if (!ctx) throw new Error('useTheme ThemeProvider ichida ishlatilishi kerak')
+  return ctx
 }

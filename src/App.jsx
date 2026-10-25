@@ -1,65 +1,48 @@
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
-import { useEffect, Suspense, lazy } from 'react';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
+import { useEffect, useState } from 'react'
+import Navbar from './components/Navbar'
+import Footer from './components/Footer'
+import Home from './pages/Home'
+import Projects from './pages/Projects'
+import Skills from './pages/Skills'
+import Packages from './pages/Packages'
+import About from './pages/About'
+import Contact from './pages/Contact'
+import OrderModal from './components/OrderModal'
 
-const Home = lazy(() => import('./pages/Home'));
-const About = lazy(() => import('./pages/About'));
-const Skills = lazy(() => import('./pages/Skills'));
-const Projects = lazy(() => import('./pages/Projects'));
-const Contact = lazy(() => import('./pages/Contact'));
-
-function ScrollToTop() {
-  const { pathname } = useLocation();
-  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
-  return null;
-}
-
-function PageTransition({ children }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -12 }}
-      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-function AppRoutes() {
-  const location = useLocation();
-  return (
-    <AnimatePresence mode="wait">
-      <Routes location={location} key={location.pathname}>
-        <Route path="/" element={<PageTransition><Home /></PageTransition>} />
-        <Route path="/about" element={<PageTransition><About /></PageTransition>} />
-        <Route path="/skills" element={<PageTransition><Skills /></PageTransition>} />
-        <Route path="/projects" element={<PageTransition><Projects /></PageTransition>} />
-        <Route path="/contact" element={<PageTransition><Contact /></PageTransition>} />
-      </Routes>
-    </AnimatePresence>
-  );
+// Sahifa bo'ylab progress chizig'i (qo'shimcha effekt)
+function ScrollProgress() {
+  const [p, setP] = useState(0)
+  useEffect(() => {
+    const onScroll = () => {
+      const h = document.documentElement.scrollHeight - window.innerHeight
+      setP(h > 0 ? Math.min(1, window.scrollY / h) : 0)
+    }
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', onScroll)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', onScroll)
+    }
+  }, [])
+  return <div className="scroll-progress" style={{ transform: `scaleX(${p})` }} aria-hidden="true" />
 }
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <ScrollToTop />
-      {/* Fixed ambient glow — purely decorative, never blocks scrolling */}
-      <div className="ios-ambient-glow" aria-hidden="true" />
-      {/* Page wrapper */}
-      <div className="relative z-10 min-h-screen">
-        <Navbar />
-        <main className="pt-20">
-          <Suspense fallback={<div className="min-h-screen bg-slate-50 dark:bg-black" />}>
-            <AppRoutes />
-          </Suspense>
-        </main>
-        <Footer />
-      </div>
-    </BrowserRouter>
-  );
+    <>
+      <ScrollProgress />
+      <Navbar />
+      <main>
+        <Home />
+        <Projects />
+        <Skills />
+        <Packages />
+        <About />
+        <Contact />
+      </main>
+      <Footer />
+      <OrderModal />
+    </>
+  )
 }
